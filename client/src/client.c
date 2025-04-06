@@ -39,8 +39,6 @@ int main(void)
 	log_info(logger, "El puerto obtenido es: %s", puerto);
 	log_info(logger, "El valor obtenido es: %s", valor);
 
-	
-
 	/* ---------------- LEER DE CONSOLA ---------------- */
 
 	leer_consola(logger);
@@ -54,13 +52,12 @@ int main(void)
 
 	// Enviamos al servidor el valor de CLAVE como mensaje
 
-	enviar_mensaje(clave, conexion);
+	enviar_mensaje(valor, conexion);
 
 	// Armamos y enviamos el paquete
 	paquete(conexion);
 
 	terminar_programa(conexion, logger, config);
-
 
 	/*---------------------------------------------------PARTE 5-------------------------------------------------------------*/
 	// Proximamente
@@ -120,28 +117,25 @@ void paquete(int conexion)
 {
 	// Ahora toca lo divertido!
 	char *leido;
-	t_paquete *paquete;
+	t_paquete *paquete = crear_paquete();
 
 	// Leemos y esta vez agregamos las lineas al paquete
+	leido = readline("> ");
 
-	while (1) {
-			// Leer una línea
-			leido = readline("> ");
+	// Agregar la línea al paquete
+	// agregar_a_paquete(paquete, leido, strlen(leido) + 1);
 
-			// Agregar la línea al paquete
-			agregar_a_paquete(paquete, leido, strlen(leido) + 1);
-
-			// Verificar si la línea es vacía
-			if (!strncmp(leido, "\0", 1)) {
-				// Liberar la memoria asignada a la línea vacía y salir del bucle
-				free(leido);
-				break;
-			}
-		
-		}
+	// Verificar si la línea es vacía
+	while (strcmp(leido, "") != 0)
+	{
+		// Liberar la memoria asignada a la línea vacía y salir del bucle
+		agregar_a_paquete(paquete, leido, strlen(leido) + 1);
+		free(leido);
+		leido = readline("> ");
+	}
 
 	enviar_paquete(paquete, conexion);
-	
+	eliminar_paquete(paquete);
 
 	// ¡No te olvides de liberar las líneas y el paquete antes de regresar!
 }
