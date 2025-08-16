@@ -35,6 +35,8 @@ int iniciar_servidor(void)
 
 	// Escuchamos las conexiones entrantes
 
+	int fd_conexion = accept(fd_escucha, NULL, NULL);
+
 	freeaddrinfo(servinfo);
 	log_trace(logger, "Listo para escuchar a mi cliente");
 
