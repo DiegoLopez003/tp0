@@ -21,21 +21,20 @@ int iniciar_servidor(void)
 
 	// Creamos el socket de escucha del servidor
 
-	int fd_escucha = socket(server_info->ai_family,
-							server_info->ai_socktype,
-							server_info->ai_protocol);
+	socket_servidor = socket(servinfo->ai_family,
+							servinfo->ai_socktype,
+							servinfo->ai_protocol);
 
 	// Asociamos el socket a un puerto
 
-	err = setsockopt(fd_escucha, SOL_SOCKET, SO_REUSEPORT, &(int){1}, sizeof(int));
+	err = setsockopt(socket_servidor, SOL_SOCKET, SO_REUSEPORT, &(int){1}, sizeof(int));
 
-	err = bind(fd_escucha, server_info->ai_addr, server_info->ai_addrlen);
+	err = bind(socket_servidor, servinfo->ai_addr, servinfo->ai_addrlen);
 
-	err = listen(fd_escucha, SOMAXCONN);
+	err = listen(socket_servidor, SOMAXCONN);
 
 	// Escuchamos las conexiones entrantes
 
-	int fd_conexion = accept(fd_escucha, NULL, NULL);
 
 	freeaddrinfo(servinfo);
 	log_trace(logger, "Listo para escuchar a mi cliente");
@@ -46,10 +45,10 @@ int iniciar_servidor(void)
 int esperar_cliente(int socket_servidor)
 {
 	// Quitar esta línea cuando hayamos terminado de implementar la funcion
-	assert(!"no implementado!");
+	//assert(!"no implementado!");
 
 	// Aceptamos un nuevo cliente
-	int socket_cliente;
+	int socket_cliente = accept(socket_servidor, NULL, NULL);;
 	log_info(logger, "Se conecto un cliente!");
 
 	return socket_cliente;
